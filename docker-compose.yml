@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: testdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./psql/3_ddl.sql:/docker-entrypoint-initdb.d/3_ddl.sql
+      - ./psql/4_dml.sql:/docker-entrypoint-initdb.d/4_dml.sql
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse
+    ports:
+      - "8125:8123"
+      - "9002:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./click/1_ddl.sql:/docker-entrypoint-initdb.d/1_ddl.sql
+      - ./click/2_dml.sql:/docker-entrypoint-initdb.d/2_dml.sql
+
+volumes:
+  postgres_data:
+  clickhouse_data:
